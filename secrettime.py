@@ -12,7 +12,7 @@ from Cryptodome.Signature import DSS
 def aes_encryption():
     key = get_random_bytes(16)  # AES key size can be 16, 24, or 32 bytes long
     cipher = AES.new(key, AES.MODE_EAX)
-    data = b'This is the data to encrypt' * 1000  # 增大数据量以观察性能差异
+    data = b'This is the data to encrypt' * 1000
     start_time = time()
     ciphertext, tag = cipher.encrypt_and_digest(data)
     end_time = time()
@@ -47,11 +47,11 @@ def des_encryption():
 def rsa_encryption():
     key = RSA.generate(2048)
     cipher = PKCS1_OAEP.new(key.publickey())
-    data = b'This is the data to encrypt' * 100  # 减少数据量，因为 RSA 较慢
+    data = b'This is the data to encrypt' * 100
     start_time = time()
 
     # 分段进行 RSA 加密
-    max_length = key.size_in_bytes() - 2 * 20 - 2  # 对于 SHA-1 哈希（20字节）
+    max_length = key.size_in_bytes() - 2 * 20 - 2
     ciphertext = b""
     for i in range(0, len(data), max_length):
         chunk = data[i:i + max_length]

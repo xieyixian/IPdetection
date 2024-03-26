@@ -5,7 +5,7 @@ import pandas as pd
 import joblib
 import geoip2.database
 
-# 指向您下载的GeoLite2数据库文件的路径
+# Path to the GeoLite2 database file you downloaded
 GEOIP_DATABASE_PATH = '/home/GeoLite2-City.mmdb'
 
 
@@ -39,7 +39,7 @@ def load_blacklist(filepath):
 def preprocess(data, blacklist):
     processed_data = data[~data['IP'].isin(blacklist)]
 
-    # 转换时间列为 UNIX 时间戳
+    # Convert time column to UNIX timestamp
     processed_data['Time'] = pd.to_datetime(processed_data['Time']).astype('int64') // 10 ** 9
 
     enriched_info = [enrich_ip_data(ip) for ip in processed_data['IP']]
@@ -47,18 +47,18 @@ def preprocess(data, blacklist):
 
     processed_data = pd.concat([processed_data.reset_index(drop=True), enriched_df], axis=1)
 
-    # 将类别数据转换为数值代码
+    # Convert categorical data to numeric codes
     processed_data['Accept-Language'] = processed_data['Accept-Language'].astype('category').cat.codes
     processed_data['Location'] = processed_data['Location'].astype('category').cat.codes
     processed_data['country'] = processed_data['country'].astype('category').cat.codes
     processed_data['city'] = processed_data['city'].astype('category').cat.codes
 
-    # 处理数值列中的 NaN 值
+    # Handling NaN values in numeric columns
     numeric_cols = processed_data.select_dtypes(include=['float64', 'int64']).columns
     for col in numeric_cols:
         processed_data[col].fillna(processed_data[col].mean(), inplace=True)
 
-    # 移除原始的 IP 列
+    # Remove original IP column
     return processed_data.drop(['IP'], axis=1)
 
 

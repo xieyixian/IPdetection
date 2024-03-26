@@ -1,11 +1,9 @@
 import pandas as pd
 import joblib
 import geoip2.database
-
-# 更新这些路径以反映您的环境
 GEOIP_DATABASE_PATH = 'GeoLite2-City.mmdb'
 MODEL_PATH = 'model.pkl'
-BLACKLIST_PATH = 'blacklist_ips.csv'  # 假设的黑名单文件路径
+BLACKLIST_PATH = 'blacklist_ips.csv'
 
 def enrich_ip_data(ip_address):
     with geoip2.database.Reader(GEOIP_DATABASE_PATH) as reader:
@@ -51,18 +49,13 @@ def preprocess(data, blacklist, model):
     for col in numeric_cols:
         processed_data[col] = processed_data[col].fillna(processed_data[col].mean())
 
-    # 确保列的顺序与模型训练时的顺序相同
     processed_data = processed_data[model.feature_names_in_]
 
     return processed_data
 
 
-# 之后的代码保持不变
+model = joblib.load(MODEL_PATH)
 
-
-model = joblib.load(MODEL_PATH)  # 提前加载模型以获取feature_names_in_
-
-# 模拟的测试数据
 test_data = pd.DataFrame({
     'IP': ['127.0.0.1'],
     'Time': ['2022-03-20 14:22:00'],
@@ -70,9 +63,9 @@ test_data = pd.DataFrame({
     'Location': ['None, None, None'],
 })
 
-blacklist = load_blacklist(BLACKLIST_PATH)  # 加载黑名单
-processed_test_data = preprocess(test_data, blacklist, model)  # 预处理测试数据
+blacklist = load_blacklist(BLACKLIST_PATH)
+processed_test_data = preprocess(test_data, blacklist, model)
 
-prediction = model.predict(processed_test_data)  # 使用模型进行预测
+prediction = model.predict(processed_test_data)
 
 print(f"Prediction: {prediction}")

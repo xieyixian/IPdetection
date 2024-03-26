@@ -1,22 +1,18 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # 引入CORS
+from flask_cors import CORS
 import pandas as pd
 import joblib
 import geoip2.database
 import ipaddress
 
 app = Flask(__name__)
-CORS(app)  # 启用CORS
+CORS(app)
 
-# 以下是你的代码...
-
-
-# 更新这些路径以反映您的环境
 GEOIP_DATABASE_PATH = 'GeoLite2-City.mmdb'
 MODEL_PATH = 'model.pkl'
 BLACKLIST_PATH = 'blacklist_ips.csv'
 
-# 加载预先训练好的模型和黑名单
+# Load pre-trained models and blacklists
 model = joblib.load(MODEL_PATH)
 
 

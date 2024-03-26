@@ -78,7 +78,7 @@ def preprocess(data, blacklist, model):
 @app.route('/ipcheck', methods=['POST'])
 def predict():
     data = request.get_json()
-    # 获取IP地址
+    #get IP address
     if request.headers.getlist("X-Forwarded-For"):
         ip_address = request.headers.getlist("X-Forwarded-For")[0]
     else:
